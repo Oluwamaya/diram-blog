@@ -1,0 +1,124 @@
+
+*{
+    padding: 0;
+    margin: 0;
+}
+.gee{
+    display: flex;
+    max-width: 100%;
+}
+.len{
+    background-image: linear-gradient(rgb(0,0,0,0.5),rgb(0,0,0,0.5),rgb(0,0,0,0.5)), url(water.webp);
+    height: 100vh;
+    width: 100%;
+    
+}
+.glo{
+    width: 130%;
+    height: 100vh;
+}
+
+
+form{
+     margin: auto;
+    background: rgba(165, 42, 42, 0.493);
+    border: 1px solid gold;
+    border-radius: 20px;
+    max-width: 400px;
+    /* height: 400px; */
+    margin-top: 150px;
+    text-align: center;
+}
+.wel{
+    
+    
+    margin: 30px 0;
+    font-size: large;
+    font-weight: 600;
+    animation-name: wel;
+    animation-timing-function:cubic-bezier(0.075, 0.82, 0.165, 1);
+    animation-direction: alternate-reverse;
+    animation-iteration-count: infinite;
+    animation-duration: 2s;
+    transition: all 3s ease-in;
+}
+@keyframes wel{
+    0%{
+        transform: translate(25%);
+        color: gold;
+    }
+    50%{
+        transform: translate(-20%);
+        color: pink;
+    }
+}
+.lol{
+    position: relative;
+    border: 1px solid rebeccapurple;
+    background: white;
+    color: black;
+    border-radius: 20px;
+    width: 65%;
+    height: 30px;
+    margin-left: 10px;
+}
+#pass,#cpass{
+    /* position: absolute; */
+    outline: none;
+    width: 100%;
+    background: none;
+    border: none;
+    margin-left: 20px;
+}
+
+.but,.bom{
+    position: absolute;
+    right: 3px;
+    top: 0;
+    outline: none;
+    /* width: 100%; */
+    background: none;
+    border: none;
+}
+.kot{
+    display: flex;
+    margin: 8px 0 0 10px ;
+    margin-top:20px ;
+}
+label{
+    font-size: 15px;
+    font-weight: 500;
+    font-family:'Segoe UI';
+    margin-top: 4px;
+}
+#username, #email{
+    margin-left: 15px;
+    width: 80%;
+    height: 30px;
+    border-radius: 20px;
+    outline: none;
+    padding-left: 10px;
+    border: none;
+}
+
+@media (max-width:780px) {
+    .len{
+        max-width: 100%;
+        background-image: linear-gradient(rgb(0,0,0,0.5),rgb(0,0,0,0.5),rgb(0,0,0,0.5)), url(gif.gif);
+    }
+    form{
+        background: transparent;
+        border: none;
+        box-shadow: 1px 1px 3px 2px white;
+    }
+    
+    .glo{
+        display: none;
+    }
+    .wel{
+        color: white;
+    }
+    label{
+        color: gold;
+    }
+}

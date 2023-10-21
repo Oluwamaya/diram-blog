@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://www.gstatic.com/firebasejs/10.2.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.2.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-storage-compat.js"></script>
+
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"rel="stylesheet"/>
+    <link rel="stylesheet" href="bootstrap-5.3.0-alpha3-dist/css/bootstrap.min.css">
+    <script src="bootstrap-5.3.0-alpha3-dist/js/bootstrap.min.js"></script>
+   
+  </head>
+  <body>
+    <main>
+      <img alt="image" width="100" height="100" id="imgReader" src="">
+      <input type="file" onchange="pickme(event)">
+      <h3 id="not"> upload is  <span id="read"></span> % done</h3>
+    </main>
+    <main
+      class="col-sm-7 border text-center bg-dark m-auto text-light shadow-lg mt-5"
+    >
+      <h1  class="display-6">Welcome to <p id="cut"></p> page</h1>
+      <form action="" class="form-group">
+        <input
+          type="text"
+          id="title"
+          class="form-control my-3"
+          placeholder="title"
+        />
+        <textarea
+          name=""
+          class="form-control mb-3"
+          id="content"
+          cols="30"
+          placeholder="what are you telling us today"
+          rows="10"
+        ></textarea>
+        <button class="btn btn-primary" id="clon" onclick="bam(event)">
+          Submit
+        </button>
+        <button class="btn btn-primary" id="icon">
+          <i class="bx bx-loader-circle bx-spin bx-rotate-180"></i>
+        </button>
+        <p id="showPost"></p>
+      </form>
+    </main>
+  </body>
+  <script>
+    // import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyABtwx1BuGo72n4Gr9zIOhv6PajJmMGJLs",
+      authDomain: "diramproject.firebaseapp.com",
+      projectId: "diramproject",
+      storageBucket: "diramproject.appspot.com",
+      messagingSenderId: "1093395022345",
+      appId: "1:1093395022345:web:8d708ea4a167e472976ed8",
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    var storageRef = firebase.storage().ref();
+
+    // const timestamp = firebase.firestore.fieldValue.serverTimestamp();
+  </script>
+  <script>
+    let title = document.getElementById("title");
+    let content = document.getElementById("content");
+    let clon = document.getElementById("clon");
+    let icon = document.getElementById("icon");
+    let showPost = document.getElementById("showPost");
+    let imgReader = document.getElementById("imgReader");
+    let cut  = document.getElementById("cut")
+    let read  = document.getElementById("read")
+    let not  = document.getElementById("not")
+    not.style.display = "none"
+   diram()
+   function diram(){
+    
+    firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    console.log(user)
+    // User is signed in, see docs for a list of available properties
+    // https://firebase.google.com/docs/reference/js/v8/firebase.User
+    var uid = user.email;
+    console.log(uid)
+    cut.innerHTML = uid
+    // ...
+  } else {
+    // User is signed out
+    alert("no user signed in")
+    window.location.href = " index.html"
+  }
+});
+   }  
+
+    icon.style.display = "none";
+
+    function bam(ev) {
+      ev.preventDefault();
+      clon.style.display = "none";
+      icon.style.display = "block";
+
+      // Add a new document in collection "cities"
+      db.collection("hello")  .doc().set({
+          Title: title.value,
+          Content: content.value,
+          // timePosted: timestamp,
+        })
+        .then(() => {
+          console.log("Document successfully written!");
+          alert("Executed")
+          dispPost()
+          clon.style.display = "block";
+          icon.style.display = "none";
+        })
+        .catch((error) => {
+          console.error("Error writing document: ", error);
+        });
+    }
+
+    function dispPost() {
+      showPost.innerHTML = "";
+      db.collection("hello").get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+            showPost.innerHTML += `<div> 
+            <h3>${doc.data().Title}</h3>
+            <p>${doc.data().Content}</p>
+            <p>${doc.data().timePosted}</p>
+            <button onclick= "delPost('${doc.id}', event)">&times;</button>
+            </div><hr>`;
+        });
+      });
+    }
+
+    dispPost();
+
+    function delPost(id, ev) {
+      ev.preventDefault()
+      db.collection("hello").doc(id).delete().then(() => {
+          console.log("Document successfully deleted!");
+          alert("Deleted");
+          dispPost();
+        }).catch((error) => {
+          console.error("Error removing document: ", error);
+        });
+    }
+
+    function pickme(ev) {
+      ev.preventDefault()
+      let file = ev.target.files[0]
+      // Create the file metadata
+      var metadata = {
+        contentType: 'image/jpeg'
+      };
+
+      // Upload file and metadata to the object 'images/mountains.jpg'
+      var uploadTask = storageRef.child('images/' + file.name).put(file, metadata);
+
+      // Listen for state changes, errors, and completion of the upload.
+      uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+        (snapshot) => {
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          not.style.display= " block"
+          console.log('Upload is ' + Math.floor(progress) + '% done');
+          read.innerHTML = Math.floor(progress)
+          switch (snapshot.state) {
+            case firebase.storage.TaskState.PAUSED: // or 'paused'
+            console.log('Upload is paused');
+            break;
+            case firebase.storage.TaskState.RUNNING: // or 'running'
+            console.log('Upload is running');
+            break;
+          }
+        }, 
+        (error) => {
+          // A full list of error codes is available at
+          // https://firebase.google.com/docs/storage/web/handle-errors
+          console.log(error);
+          switch (error.code) {
+            case 'storage/unauthorized':
+              // User doesn't have permission to access the object
+              break;
+            case 'storage/canceled':
+              // User canceled the upload
+              break;
+
+            // ...
+
+            case 'storage/unknown':
+              // Unknown error occurred, inspect error.serverResponse
+              break;
+          }
+        }, 
+        () => {
+          // Upload completed successfully, now we can get the download URL
+          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+            not.style.display= "none"
+            console.log('File available at', downloadURL);
+            imgReader.src = downloadURL
+          }).catch((err) => {
+            alert(err)
+          });
+        }
+      );
+    }
+  </script>
+</html>

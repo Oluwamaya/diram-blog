@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="bootstrap-5.3.0-alpha3-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="sign.css">
+    <script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-auth-compat.js"></script>
+   
+    
+</head>
+<body>
+    <div class="gee container">
+        
+        <img class="glo" src="gif.gif" alt="">
+        
+        <div class="len container">
+        <form action="" class="form-group">
+            <p class="wel">Welcome Please sign up here</p>
+            <div class="kot">
+            <label for="user">name : </label>
+            <input id="username" type="text"><br>
+            </div>
+            <div class="kot">
+            <label for="email">Email :</label>
+            <input id="email" placeholder="Enter your Email" type="email"><br>
+            </div>
+            <div class="kot">
+            <label for="pass">Password :</label>
+            <div class="lol">
+            <input id="pass" type="password"><br>
+            <button onclick="semi(event)" class="bom">👁</button>
+            </div>
+            </div>
+            <div class="kot">
+            <label for="cpass">C.Password :</label>
+            <div class="lol">
+            <input id="cpass" type="password"><br>
+            <button onclick="see(event)" class="but">👁</button>
+            </div>
+            </div>
+            <button onclick="signUp(event)" class="btn btn-info my-4">Sign Up</button>
+            
+            <p class="text-light">OR</p>
+            <button class="btn btn-warning mb-3" onclick="goo(event)">Google</button>
+
+        
+        </form>
+        </div>
+    </div>
+</body>
+
+<script src="bootstrap-5.3.0-alpha3-dist/"></script>
+</html>
+<script>
+    // import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyABtwx1BuGo72n4Gr9zIOhv6PajJmMGJLs",
+      authDomain: "diramproject.firebaseapp.com",
+      projectId: "diramproject",
+      storageBucket: "diramproject.appspot.com",
+      messagingSenderId: "1093395022345",
+      appId: "1:1093395022345:web:8d708ea4a167e472976ed8"
+    };
+  
+    const app = firebase.initializeApp(firebaseConfig);
+    var provider = new firebase.auth.GoogleAuthProvider();
+  </script>
+
+  <script>
+    // let user = document.getElementById("user")
+    let email = document.getElementById("email")
+    let password = document.getElementById("pass")
+    let cpassword = document.getElementById("cpass")
+
+     function see(ev){
+        ev.preventDefault()
+        if (cpassword.type == "password") {
+            cpassword.type = "text"
+        }
+        else{
+            cpassword.type ="password"
+        }
+     }
+     function semi(ev){
+        ev.preventDefault()
+        if (password.type == "password") {
+            password.type = "text"
+        } else {
+            password.type = "password"
+        }
+     }
+     
+    function signUp(e){
+        e.preventDefault()
+        firebase.auth().createUserWithEmailAndPassword(email.value, password.value)
+        .then((userCredential) => {
+            // Signed in 
+            var user = userCredential.user;
+            // const user = firebase.auth().currentUser;
+            
+            if (user) {
+                alert("successful")
+                location.href = "index.html"
+            }
+            //YOU PASTE 
+            user.updateProfile({
+            displayName: username.value,
+            
+            //   photoURL: "https://example.com/jane-q-user/profile.jpg"
+            }).then(() => {
+            // ...
+            }).catch((error) => {
+            // An error occurred
+            // ...
+            });  
+            // ...
+        })
+        .catch((error) => {
+           
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            alert(error.message)
+            // ..
+        });
+    }
+    function goo(e){
+        e.preventDefault()
+        firebase.auth()
+        .signInWithPopup(provider)
+        .then((result) => {
+            /** @type {firebase.auth.OAuthCredential} */
+            var credential = result.credential;
+
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            var token = credential.accessToken;
+            // The signed-in user info.
+            var user = result.user;
+            // IdP data available in result.additionalUserInfo.profile.
+            if(user){
+                alert("Signup successful")
+            }
+        }).catch((error) => {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // The email of the user's account used.
+            var email = error.email;
+            // The firebase.auth.AuthCredential type that was used.
+            var credential = error.credential;
+            alert("Error login")
+        });
+        window.location.href ="index.html"
+        
+    }
+  </script>

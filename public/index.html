@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="bootstrap-5.3.0-alpha3-dist/css/bootstrap.min.css">
+  <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
+
+</head>
+<style>
+  *{
+    padding: 0;
+    margin: 0;
+  }
+  body{
+    background-image:linear-gradient(rgb(0,0,0,0.5),rgb(0,0,0,0.5),rgb(0,0,0,0.5)), url(rabbit.png);
+    height: 92vh;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  .boy{
+    box-shadow: 3px 3px 7px 2px white ;
+    border-radius: 15px;
+  }
+  .in{
+    border: none;
+    background: none;
+    outline: none;
+    width: 100%;
+  }
+  .bad{
+    position: relative;
+  }
+  .bad:focus-within{
+    box-shadow: 2px 2px 7px 3px rgb(63, 171, 204);
+  }
+  .eye{
+    position: absolute;
+    right: 2px;
+    background: none;
+    border: none;
+  }
+  .disp{
+    color: darkmagenta;
+    font-size: 18px;
+    font-family: sans-serif;
+    font-weight: bold;
+  }
+  .dis{
+    font-size: 18px;
+    font-family: sans-serif;
+    font-weight: bold;
+  }
+  /* @media (max-width:480px) {
+     .boy{
+      max-width: 100%;
+     }
+  } */
+</style>
+<body >
+  <main class="man container d-flex align-items-center justify-content-center mt-5 ">
+    
+    <div class ="boy col-sm-4 border text-center  text-light ">
+      <p class="disp ">Please Login Here</p>
+      <label class="dis" for="boss">Email: </label>
+      <input class="form-control" type="email" name="" id="boss"><br>
+      <label class="dis" for="pass">Password: </label>
+      <div class="bad form-control">
+      <input class="in" type="password" name="" id="pass">
+      <button onclick="see(event)" class="eye">👁</button>
+      </div><br>
+      <p class=" text-danger">forget your password ?</p>
+      <button onclick="log(event)" class="btn btn-info text-light">Login</button>
+      <p class="text-warning">Or</p>
+      <button onclick="ent(event)" class="btn btn-info text-light mb-4">Sign Up</button>
+     
+    </div>
+  </main>
+</body>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyABtwx1BuGo72n4Gr9zIOhv6PajJmMGJLs",
+    authDomain: "diramproject.firebaseapp.com",
+    projectId: "diramproject",
+    storageBucket: "diramproject.appspot.com",
+    messagingSenderId: "1093395022345",
+    appId: "1:1093395022345:web:8d708ea4a167e472976ed8"
+  };
+
+  // Initialize Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+</script>
+
+<script>
+ let email = document.getElementById("boss")
+  let password = document.getElementById("pass")
+   
+  function see(ev){
+    ev.preventDefault()
+    if (password.type == "password") {
+      password.type = "text"
+    }
+    else{
+      password.type = "password"
+    }
+  }
+function ent(e){
+  e.preventDefault()
+   
+  window.location.href= "signup.html"
+}
+
+function log(ev){
+  ev.preventDefault()
+  firebase.auth().signInWithEmailAndPassword(email.value, password.value)
+  .then((userCredential) => {
+    // Signed in
+    var user = userCredential.user;
+    alert("login successful")
+    window.location.href = "dashboard.html"
+  })
+  .catch((error) => {
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    alert("Email & Password did not match")
+  });
+ 
+}
+</script>
+
+<script src="bootstrap-5.3.0-alpha3-dist/js/bootstrap.min.js"></script>
+</html>
